@@ -21,7 +21,7 @@ A lightweight Docker container that provides SFTP access with RADIUS authenticat
 1. **Clone the repository**:
 
    ```bash
-   https://github.com/connorvernet/Docker-SFTP-Radius.git
+   git clone https://github.com/connorvernet/Docker-SFTP-Radius.git
    cd Docker-SFTP-Radius
    ```
 2. **Edit the docker-compose.yml Environment Variables**
