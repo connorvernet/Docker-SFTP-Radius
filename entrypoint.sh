@@ -52,13 +52,13 @@ for x in "${_raw[@]}"; do
   n="$(echo "$x" | xargs)"; [[ -n "$n" ]] && desired_users+=("$n")
 done
 
-# --- ADD/UPDATE: ensure desired users exist (primary group = sftponly, nologin, local pw locked)
+#Ensure desired users exist (primary group = sftponly, nologin, local pw locked)
 for name in "${desired_users[@]}"; do
   if ! id "$name" >/dev/null 2>&1; then
     useradd -m -g "${SFTP_GROUP}" -s /usr/sbin/nologin "$name"
     echo "[add] $name"
   else
-    # ensure primary group is sftponly (optional)
+    # ensure primary group is sftponly
     primary_gid="$(id -g "$name")"
     sftponly_gid="$(getent group "${SFTP_GROUP}" | cut -d: -f3)"
     if [[ "$primary_gid" != "$sftponly_gid" ]]; then
@@ -71,7 +71,7 @@ done
 # Build a quick membership string for contains checks
 desired_str=" ${desired_users[*]} "
 
-# --- PRUNE: remove managed users not listed in USERS
+# Remove managed users not listed in USERS
 # Only consider accounts whose PRIMARY group is sftponly (our managed set) and with UID >= 1000
 sftponly_gid="$(getent group "${SFTP_GROUP}" | cut -d: -f3)"
 while IFS=: read -r uname _ uid gid _ _ _; do
