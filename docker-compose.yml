@@ -1,0 +1,14 @@
+services:
+  sftp-radius:
+    build: .
+    container_name: sftp-radius
+    environment:
+      - RADIUS_HOST=192.168.1.100
+      - RADIUS_PORT=1812
+      - RADIUS_SECRET=your-radius-secret-here
+      - RADIUS_TIMEOUT=5
+      - SFTP_PORT=2222
+      - USERS=user1,user2,user3
+    ports:
+      - "2222:2222"
+    restart: unless-stopped
