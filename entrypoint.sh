@@ -34,7 +34,7 @@ cat >/etc/ssh/sshd_config <<CFG
 Port ${SFTP_PORT}
 UsePAM yes
 KbdInteractiveAuthentication yes
-PasswordAuthentication no
+PasswordAuthentication yes
 Subsystem sftp internal-sftp
 # Force SFTP for all users; no shells
 ForceCommand internal-sftp
