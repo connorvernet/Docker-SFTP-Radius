@@ -6,7 +6,8 @@ A lightweight Docker container that provides SFTP access with RADIUS authenticat
 
 - **RADIUS Authentication**: Authenticate users against your existing RADIUS infrastructure
 - **SFTP-Only Access**: Users can only access SFTP, no shell access
-- **Secure Configuration**: No chroot, minimal attack surface
+- **Chroot-to-Home**: Users are jailed to their home directory and cannot escape it
+- **Writable Subfolder**: Each user gets a `data/` directory inside their home for uploads
 - **Docker Ready**: Easy deployment/re-deployment with Docker Compose
 - **User Management**: Automatic user creation and cleanup based on environment variables
 - **Lightweight**: Based on Ubuntu 24.04 with minimal dependencies
@@ -56,7 +57,7 @@ docker build -t sftp-radius .
 1. **Container Initialization**:
    - Generates SSH host keys
    - Configures PAM for RADIUS authentication
-   - Sets up SFTP-only SSH configuration
+   - Sets up SFTP-only SSH configuration with a chroot for users in the `sftponly` group
    - Creates user accounts based on the `USERS` environment variable
 
 2. **Authentication Flow**:
@@ -71,3 +72,7 @@ docker build -t sftp-radius .
    - Local passwords are locked (RADIUS only)
    - Users not in the `USERS` list are automatically removed
 
+4. **Chrooted Home and Writable Directory**:
+   - Each user's home directory is owned by `root:root` and set to `755` as required by OpenSSH chroot constraints.
+   - A per-user writable directory `data/` is created inside the home, owned by the user and group `sftponly`, with `700` permissions.
+   - Users are jailed to their own home (`ChrootDirectory %h`) and cannot traverse outside of it.
