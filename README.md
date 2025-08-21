@@ -33,7 +33,6 @@ A lightweight Docker container that provides SFTP access with RADIUS authenticat
 | `RADIUS_PORT` | RADIUS server port | `1812` | ❌ |
 | `RADIUS_SECRET` | RADIUS shared secret | - | ✅ |
 | `RADIUS_TIMEOUT` | RADIUS timeout in seconds | `5` | ❌ |
-| `SFTP_PORT` | SFTP server port | `2222` | ❌ |
 | `USERS` | Comma-separated list of usernames | - | ✅ |
 
 
