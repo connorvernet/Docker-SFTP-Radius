@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "[init] sftp-radius (minimal, no chroot, with prune)"
+echo "[init] sftp-radius (chroot-to-home, with prune)"
 
 # Required env
 : "${RADIUS_HOST:?RADIUS_HOST must be set}"
@@ -29,17 +29,20 @@ auth    required     pam_radius_auth.so
 @include common-session
 PAM
 
-# sshd config (SFTP-only, no chroot)
+# sshd config (SFTP-only, chroot users in sftponly group to their home)
 cat >/etc/ssh/sshd_config <<CFG
 Port ${SFTP_PORT}
 UsePAM yes
 KbdInteractiveAuthentication yes
 PasswordAuthentication yes
 Subsystem sftp internal-sftp
-# Force SFTP for all users; no shells
-ForceCommand internal-sftp
-AllowTcpForwarding no
-X11Forwarding no
+
+# Lock down members of sftponly
+Match Group ${SFTP_GROUP}
+    ChrootDirectory %h
+    ForceCommand internal-sftp
+    AllowTcpForwarding no
+    X11Forwarding no
 CFG
 
 # Ensure management group exists
@@ -66,6 +69,18 @@ for name in "${desired_users[@]}"; do
     fi
   fi
   passwd -l "$name" >/dev/null 2>&1 || true
+
+  # Prepare chroot: home must be root:root and non-writable; provide a writable subdir
+  home_dir="$(getent passwd "$name" | cut -d: -f6)"
+  [[ -z "$home_dir" ]] && home_dir="/home/$name"
+  mkdir -p "$home_dir"
+  chown root:root "$home_dir"
+  chmod 755 "$home_dir"
+
+  # Create a per-user writable directory inside the chroot
+  mkdir -p "$home_dir/data"
+  chown "$name":"${SFTP_GROUP}" "$home_dir/data"
+  chmod 700 "$home_dir/data"
 done
 
 # Build a quick membership string for contains checks
