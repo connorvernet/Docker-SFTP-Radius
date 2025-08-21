@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "[init] sftp-radius (chroot-to-home, with prune)"
+echo "[init] sftp-radius starting with users: ${USERS}"
 
 # Required env
 : "${RADIUS_HOST:?RADIUS_HOST must be set}"
