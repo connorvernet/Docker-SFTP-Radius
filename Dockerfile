@@ -12,6 +12,6 @@ RUN mkdir -p /run/sshd /etc/ssh/sshd_config.d
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-EXPOSE 2222
+EXPOSE 22
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["/usr/sbin/sshd", "-D", "-e"]
