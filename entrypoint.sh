@@ -11,7 +11,7 @@ echo "[init] sftp-radius (chroot-to-home, with prune)"
 # Defaults
 RADIUS_PORT="${RADIUS_PORT:-1812}"
 RADIUS_TIMEOUT="${RADIUS_TIMEOUT:-5}"
-SFTP_PORT="${SFTP_PORT:-2222}"
+SFTP_PORT="${SFTP_PORT:-22}"
 SFTP_GROUP="sftponly"
 
 # Host keys
