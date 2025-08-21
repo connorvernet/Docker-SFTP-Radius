@@ -43,7 +43,7 @@ docker build -t sftp-radius .
 
 5. **Start the container**:
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
 6. **Connect via SFTP**:
